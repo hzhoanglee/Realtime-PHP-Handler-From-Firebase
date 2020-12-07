@@ -9,8 +9,8 @@ cred = credentials.Certificate('credentials.json')
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://project-d478b.firebaseio.com/.json'
 })
-ref = db.reference('DeviceState')
+ref = db.reference(sys.argv[1])
 ref.update({
-    sys.argv[1]: sys.argv[2]
+    sys.argv[2]: sys.argv[3]
 })
-print("Updated '", sys.argv[1], "' to '", sys.argv[2],"'")
+print("Updated '", sys.argv[1], "/" , sys.argv[2], "' to '", sys.argv[3],"'")

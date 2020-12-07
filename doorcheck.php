@@ -1,7 +1,11 @@
 <?php
-$url = "https://project-d478b.firebaseio.com/Distance.json";
+include ('../config.php');
+$url = $config['firebase_url'] . "/Danger/.json";
+echo "Program started: " . $url . "\n";
 $count = 0;
-$break = 3;
+$break = 5;
+$open = 0;
+$through = 0;
 $breaktime = $break;
 while(1 == 1){
     $ch = curl_init();
@@ -9,36 +13,55 @@ while(1 == 1){
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $output = curl_exec($ch);
-//echo $output;
     curl_close($ch);
     $obj = json_decode($output);
-    $distance = $obj;
+    $door = $obj->DoorOpen;
+    $pass = $obj->DoorPassed;
     $count = $count + 1;
     echo '[' . $count . '] ';
-    switch (TRUE) {
-        case $distance == 0:
-            echo ("Cam bien loi\n");
-            sleep(5);
-            break;
-        case $distance >= 84.5:
-        case $distance <= 79:
-            echo 'Phat hien nguoi qua cua! ';
-            if ($break == $breaktime){
-                $hightemp = curl_init();
-                curl_setopt($hightemp, CURLOPT_URL, 'http://localhost/backend/send.php?title=C%E1%BA%A3nh%20b%C3%A1o!&message=C%C3%B3%20ng%C6%B0%E1%BB%9Di%20b%C6%B0%E1%BB%9Bc%20qua%20c%E1%BB%ADa');
-                curl_exec($hightemp);
-                curl_close($hightemp);
-                //$break = $break - 1;
-            }
-            if ($break == 0){
-                $break = $breaktime;
-            }
-            break;
 
-        default:
-            echo 'Khoang cach la: ' . $distance . ' cm';
-            break;
+    if($door == 0){
+        echo ("Cua dang dong");
+        sleep(1);
+        $open = 0;
+        break;
     }
-    sleep(0.5);
+    if($door == 1){
+        echo ("Cua dang mo");
+        if ($open==0){
+            $open = 1;
+            if ($open == 1){
+                $send = curl_init();
+                curl_setopt($send, CURLOPT_URL, 'http://localhost/backend/send.php?title=C%E1%BA%A3nh%20b%C3%A1o!&message=C%E1%BB%ADa%20%C4%91%C6%B0%E1%BB%A3c%20m%E1%BB%9F%20ra');
+                curl_exec($send);
+                curl_close($send);
+            }
+        }
+        elseif ($open == 1) {
+            echo ' - Da thong bao truoc do. Khong thong bao lai' . "\n";
+        }
+    }
+    if($pass == 0){
+        echo ("Khong ai qua cua");
+        sleep(1);
+        $through = 0;
+        break;
+    }
+    if($pass == 1){
+        echo ("Co nguoi qua cua");
+        if ($through==0){
+            $through = 1;
+            if ($through == 1){
+                $send = curl_init();
+                curl_setopt($send, CURLOPT_URL, 'http://localhost/backend/send.php?title=C%E1%BA%A3nh%20b%C3%A1o!&message=C%C3%B3%20ng%C6%B0%E1%BB%9Di%20b%C6%B0%E1%BB%9Bc%20qua%20c%E1%BB%ADa');
+                curl_exec($send);
+                curl_close($send);
+            }
+        }
+        elseif ($through == 1) {
+            echo ' - Da thong bao truoc do. Khong thong bao lai';
+        }
+    }
+    sleep(1);
     echo "\n";
 }

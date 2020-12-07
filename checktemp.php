@@ -1,5 +1,5 @@
 <?php
-$url = "https://project-d478b.firebaseio.com/.json";
+$url = "https://project-d478b.firebaseio.com/Sensor.json";
 $break = 10;
 $breaktime = $break;
 while(1 == 1){
@@ -18,7 +18,7 @@ case $temperature == 'nan':
     echo ("Cam bien loi\n");
         sleep(1);
         break;
-case $temperature >= 34:
+case $temperature >= 30:
     echo 'Nhiet do cao! ';
     if ($break == $breaktime){
         $hightemp = curl_init();
@@ -33,7 +33,7 @@ case $temperature >= 34:
     echo ('Canh bao sau: '.$break);
     break;
 
-case $temperature <= 18:
+case $temperature <= 27:
     echo 'Nhiet do thap! ';
     if ($break == $breaktime){
         $hightemp = curl_init();
